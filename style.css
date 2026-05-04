@@ -197,6 +197,37 @@ input[type="range"] {
   color: #94a3b8;
 }
 
+.more-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.more-track::after {
+  content: "→";
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.more-track:hover {
+  background: #34495e;
+}
+
+.more-track:hover::after {
+  transform: translateX(4px);
+}
+
+
+
 @media (max-width: 1100px) {
   .player-layout {
     grid-template-columns: 1fr;

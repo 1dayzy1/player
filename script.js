@@ -10,7 +10,20 @@ const artist = document.querySelector(".artist");
 const playlist = document.querySelector(".playlist");
 const prev = document.querySelector(".prev");
 const next = document.querySelector(".next");
+const btn_more = document.querySelector(".more-track")
 
+let count = 2;
+
+
+
+
+// if(play.classList.contains("playing")){
+//   play.textContent = "⏸";
+  
+// }else{
+//   play.textContent = "▶";
+
+// }
 
 let currentIndex = 0;
 let all_audio = [];
@@ -174,6 +187,14 @@ const renderAudio = (audio) =>{
     return;
   }
 
+  length_audio.value = 0;
+
+  end.textContent = "0:00";
+
+ 
+
+
+
   const blob = new Blob([audio.file], { type: 'audio/mpeg' });
   // Создаём URL для аудиоэлемента
   const url = URL.createObjectURL(blob);
@@ -188,7 +209,6 @@ const renderAudio = (audio) =>{
 
 
 
-
 }
 
 renderAudio()
@@ -196,7 +216,9 @@ renderAudio()
 const result = (arr_audio) => {
   playlist.textContent = "";
 
-  arr_audio.forEach((el) => {
+
+
+  arr_audio.slice(0, count).forEach((el) => {
     const item = document.createElement("li");
     item.classList.add("song-item");
     
@@ -222,11 +244,11 @@ const switchTrack = (type) =>{
 
   if(type === "prev"){
     currentIndex = (currentIndex - 1 + all_audio.length) % all_audio.length;
+
   }else if (type === "next"){
     currentIndex = (currentIndex + 1) % all_audio.length
 
   }
-
 
   renderAudio(all_audio[currentIndex]);
   audios.play()
@@ -262,4 +284,15 @@ length_audio.addEventListener("input", (e) =>{
 
 audios.addEventListener("ended", () =>{
   switchTrack("next")
+})
+
+
+btn_more.addEventListener("click", () =>{
+  count += + 2;
+
+  result(all_audio)
+  
+
+  console.log(count)
+
 })
