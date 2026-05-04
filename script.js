@@ -1,10 +1,13 @@
-const audio = document.querySelector(".audio");
+const audios = document.querySelector(".audio");
 const play = document.querySelector(".play-btn");
 const start = document.querySelector(".start");
 const end = document.querySelector(".end");
 const length_audio = document.querySelector(".length-audio");
 const volume = document.querySelector(".volume");
 const upload_audio = document.querySelector("#upload-audio");
+const song = document.querySelector(".song");
+const artist = document.querySelector(".artist");
+
 
 const formatTime = (time) => {
   if (isNaN(time)) return "0:00";
@@ -15,25 +18,24 @@ const formatTime = (time) => {
   return `${min}:${sec}`;
 };
 
-const renderAudio = () => {
-  end.textContent = formatTime(audio.duration);
-};
+// const renderAudio = () => {
+//   end.textContent = formatTime(audio.duration);
+// };
 
-renderAudio();
+// renderAudio();
 volume.addEventListener("input", () => {
-  audio.volume = volume.value / 100;
+  audios.volume = volume.value / 100;
 });
 
-audio.addEventListener("loadedmetadata", renderAudio);
+// audio.addEventListener("loadedmetadata", renderAudio);
 
 play.addEventListener("click", () => {
   if (play.classList.contains("playing")) {
-    audio.pause();
+    audios.pause();
     play.textContent = "▶";
     play.classList.remove("playing");
   } else {
-    audio.src = "./audio2.mp3";
-    audio.play();
+    audios.play();
     play.classList.add("playing");
     play.textContent = "⏸";
   }
@@ -146,19 +148,50 @@ const loadAudio = () => {
   }
 };
 
+
+const renderAudio = (audio) =>{
+  console.log(audio)
+
+  if(!audio){
+    return;
+  }
+
+  const blob = new Blob([audio.file], { type: 'audio/mpeg' });
+  // Создаём URL для аудиоэлемента
+  const url = URL.createObjectURL(blob);
+  audios.src = url;
+  artist.textContent = audio.artist;
+  song.textContent = audio.song;
+  audios.addEventListener("loadedmetadata", () =>{
+    const time = formatTime(audios.duration)
+    end.textContent = time
+
+  })
+
+
+}
+
+renderAudio()
+
 const result = (arr_audio) => {
   const playlist = document.querySelector(".playlist");
   arr_audio.forEach((el) => {
     const item = document.createElement("li");
     item.classList.add("song-item");
+    
     item.innerHTML = `
               <div>
                 <h3>${el.song}</h3>
                 <p>${el.artist}</p>
               </div>
-              <span>3:12</span>
+              
             `;
+    item.addEventListener("click", () =>{
+      renderAudio(el);
+    })
 
     playlist.appendChild(item);
   });
 };
+
+

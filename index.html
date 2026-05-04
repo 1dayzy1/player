@@ -12,7 +12,7 @@
         <section class="card upload-card">
           <h2 class="card-title">Загрузить песню</h2>
           <label class="upload-box">
-            <input type="file" accept="audio/*"  id="upload-audio" />
+            <input type="file" accept="audio/*,.mp3"  id="upload-audio" />
             <span>Нажми или перетащи аудиофайл сюда</span>
           </label>
         </section>
@@ -21,14 +21,14 @@
           <div class="track-cover">♪</div>
 
           <div class="track-info">
-            <h2>Название трека</h2>
-            <p>Исполнитель / альбом</p>
+            <h2 class="song">Название трека</h2>
+            <p class="artist">Исполнитель / альбом</p>
           </div>
 
           <div class="progress-block">
             <div class="progress-time">
               <span class="start">0:00</span>
-              <span class="end">3:45</span>
+              <span class="end">0:00</span>
             </div>
             <input type="range" min="0" max="100" value="0" class="length-audio" />
           </div>
