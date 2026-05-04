@@ -7,7 +7,13 @@ const volume = document.querySelector(".volume");
 const upload_audio = document.querySelector("#upload-audio");
 const song = document.querySelector(".song");
 const artist = document.querySelector(".artist");
+const playlist = document.querySelector(".playlist");
+const prev = document.querySelector(".prev");
+const next = document.querySelector(".next");
 
+
+let currentIndex = 0;
+let all_audio = [];
 
 const formatTime = (time) => {
   if (isNaN(time)) return "0:00";
@@ -17,6 +23,8 @@ const formatTime = (time) => {
     .padStart(2, "0");
   return `${min}:${sec}`;
 };
+
+audios.src = ""
 
 // const renderAudio = () => {
 //   end.textContent = formatTime(audio.duration);
@@ -30,6 +38,14 @@ volume.addEventListener("input", () => {
 // audio.addEventListener("loadedmetadata", renderAudio);
 
 play.addEventListener("click", () => {
+
+
+  // console.log(audios.src)
+  if(!audios.duration){
+    // alert("Выбери песню!")
+    return;
+  }
+
   if (play.classList.contains("playing")) {
     audios.pause();
     play.textContent = "▶";
@@ -137,6 +153,7 @@ const loadAudio = () => {
     const allAuido = audioStore.getAll();
 
     allAuido.onsuccess = (ev) => {
+        all_audio = ev.target.result
         result(ev.target.result);
     };
 
@@ -152,6 +169,7 @@ const loadAudio = () => {
 const renderAudio = (audio) =>{
   console.log(audio)
 
+  
   if(!audio){
     return;
   }
@@ -169,12 +187,15 @@ const renderAudio = (audio) =>{
   })
 
 
+
+
 }
 
 renderAudio()
 
 const result = (arr_audio) => {
-  const playlist = document.querySelector(".playlist");
+  playlist.textContent = "";
+
   arr_audio.forEach((el) => {
     const item = document.createElement("li");
     item.classList.add("song-item");
@@ -195,3 +216,50 @@ const result = (arr_audio) => {
 };
 
 
+
+const switchTrack = (type) =>{
+  audios.pause()
+
+  if(type === "prev"){
+    currentIndex = (currentIndex - 1 + all_audio.length) % all_audio.length;
+  }else if (type === "next"){
+    currentIndex = (currentIndex + 1) % all_audio.length
+
+  }
+
+
+  renderAudio(all_audio[currentIndex]);
+  audios.play()
+}
+
+prev.addEventListener("click", () =>{
+  switchTrack("prev")
+})
+
+next.addEventListener("click", () =>{
+  switchTrack("next")
+})
+
+
+audios.addEventListener("timeupdate", () =>{
+  start.textContent = formatTime(audios.currentTime);
+
+  if(audios.duration){
+    const progres = (audios.currentTime / audios.duration) * 100;
+    length_audio.value = progres;
+    
+  }
+
+})
+
+length_audio.addEventListener("input", (e) =>{
+  if(audios.duration){
+    const newTime = (e.target.value / 100) * audios.duration;
+    audios.currentTime = newTime;
+  }
+})
+
+
+audios.addEventListener("ended", () =>{
+  switchTrack("next")
+})
