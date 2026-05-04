@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="player-layout">
+        <section class="card upload-card">
+          <h2 class="card-title">Загрузить песню</h2>
+          <label class="upload-box">
+            <input type="file" accept="audio/*"  id="upload-audio" />
+            <span>Нажми или перетащи аудиофайл сюда</span>
+          </label>
+        </section>
+
+        <section class="card player-card">
+          <div class="track-cover">♪</div>
+
+          <div class="track-info">
+            <h2>Название трека</h2>
+            <p>Исполнитель / альбом</p>
+          </div>
+
+          <div class="progress-block">
+            <div class="progress-time">
+              <span class="start">0:00</span>
+              <span class="end">3:45</span>
+            </div>
+            <input type="range" min="0" max="100" value="0" class="length-audio" />
+          </div>
+
+          <div class="controls">
+            <audio src="" class="audio"></audio>
+            <button class="control-btn prev">⏮</button>
+            <button class="control-btn play-btn">▶</button>
+            <button class="control-btn next">⏭</button>
+          </div>
+
+          <div class="volume-block">
+            <span>🔊</span>
+            <input type="range" min="0" max="100" value="70" class="volume" />
+          </div>
+        </section>
+
+        <section class="card playlist-card">
+          <h2 class="card-title">Все песни</h2>
+          <ul class="playlist">
+            
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
