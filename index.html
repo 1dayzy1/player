@@ -12,7 +12,7 @@
         <section class="card upload-card">
           <h2 class="card-title">Загрузить песню</h2>
           <label class="upload-box">
-            <input type="file" accept="audio/*,.mp3"  id="upload-audio" />
+            <input type="file" accept="audio/*,.mp3" id="upload-audio" />
             <span>Нажми или перетащи аудиофайл сюда</span>
           </label>
         </section>
@@ -30,12 +30,17 @@
               <span class="start">0:00</span>
               <span class="end">0:00</span>
             </div>
-            <input type="range" min="0" max="100" value="0" class="length-audio" />
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value="0"
+              class="length-audio"
+            />
           </div>
 
-
           <div class="controls">
-            <audio src="" class="audio"></audio>
+            <audio src=""  class="audio"></audio>
             <button class="control-btn prev">⏮</button>
             <button class="control-btn play-btn">▶</button>
             <button class="control-btn next">⏭</button>
@@ -49,14 +54,38 @@
 
         <section class="card playlist-card">
           <h2 class="card-title">Все песни</h2>
-          <ul class="playlist">
-            
-          </ul>
+          <ul class="playlist"></ul>
 
           <button class="more-track">Показать еще</button>
         </section>
       </div>
     </div>
+
+    
+     
+      
+        <div id="delete-confirmation" class="delete-confirmation hidden">
+          <div class="delete-modal">
+            <h1 class="delete-not">Трек удален!</h1>
+            <p class="text">Точно хотите удалить этот трек?</p>
+
+            <div class="content">
+              <div class="track-info-preview">
+                <strong id="track-title"></strong><br />
+                <span id="track-artist"></span>
+              </div>
+              <div class="confirmation-buttons">
+                <button id="cancel-delete" class="btn cancel-btn">Отмена</button>
+                <button id="confirm-delete" class="btn delete-btn">
+                  Удалить
+                </button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      
+    
 
     <script src="script.js"></script>
   </body>

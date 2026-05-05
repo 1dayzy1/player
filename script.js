@@ -10,20 +10,31 @@ const artist = document.querySelector(".artist");
 const playlist = document.querySelector(".playlist");
 const prev = document.querySelector(".prev");
 const next = document.querySelector(".next");
-const btn_more = document.querySelector(".more-track")
+const btn_more = document.querySelector(".more-track");
+const delete_confirmation = document.querySelector(".delete-confirmation");
 
+const track_title = document.querySelector("#track-title");
+const track_artist = document.querySelector("#track-artist");
+
+const btn_delete = document.querySelector(".cancel-btn");
+const btn_confirm = document.querySelector(".delete-btn");
+const delete_modal = document.querySelector(".delete-modal")
 let count = 2;
 
 
+const checkClass = () =>{
 
-
-// if(play.classList.contains("playing")){
-//   play.textContent = "⏸";
+  if(play.classList.contains("playing")){
+    play.textContent = "⏸";
   
-// }else{
-//   play.textContent = "▶";
+  }else{
+    play.textContent = "▶";
+  
+  }
 
-// }
+}
+
+
 
 let currentIndex = 0;
 let all_audio = [];
@@ -37,7 +48,7 @@ const formatTime = (time) => {
   return `${min}:${sec}`;
 };
 
-audios.src = ""
+audios.src = "";
 
 // const renderAudio = () => {
 //   end.textContent = formatTime(audio.duration);
@@ -51,10 +62,8 @@ volume.addEventListener("input", () => {
 // audio.addEventListener("loadedmetadata", renderAudio);
 
 play.addEventListener("click", () => {
-
-
   // console.log(audios.src)
-  if(!audios.duration){
+  if (!audios.duration) {
     // alert("Выбери песню!")
     return;
   }
@@ -151,7 +160,7 @@ const saveAudio = (audio) => {
 
   addObj.onsuccess = () => {
     console.log(`файл ${audio.fileName} сохранен`);
-    loadAudio()
+    loadAudio();
   };
 
   addObj.onerror = () => {
@@ -166,8 +175,8 @@ const loadAudio = () => {
     const allAuido = audioStore.getAll();
 
     allAuido.onsuccess = (ev) => {
-        all_audio = ev.target.result
-        result(ev.target.result);
+      all_audio = ev.target.result;
+      result(ev.target.result);
     };
 
     allAuido.onerror = (ev) => {
@@ -178,12 +187,10 @@ const loadAudio = () => {
   }
 };
 
+const renderAudio = (audio) => {
+  console.log(audio);
 
-const renderAudio = (audio) =>{
-  console.log(audio)
-
-  
-  if(!audio){
+  if (!audio) {
     return;
   }
 
@@ -191,108 +198,135 @@ const renderAudio = (audio) =>{
 
   end.textContent = "0:00";
 
- 
-
-
-
-  const blob = new Blob([audio.file], { type: 'audio/mpeg' });
+  const blob = new Blob([audio.file], { type: "audio/mpeg" });
   // Создаём URL для аудиоэлемента
   const url = URL.createObjectURL(blob);
   audios.src = url;
   artist.textContent = audio.artist;
   song.textContent = audio.song;
-  audios.addEventListener("loadedmetadata", () =>{
-    const time = formatTime(audios.duration)
-    end.textContent = time
+  audios.addEventListener("loadedmetadata", () => {
+    const time = formatTime(audios.duration);
+    end.textContent = time;
+  });
 
-  })
+  audios.play()
+  play.classList.add("playing")
+  checkClass()
+};
 
+renderAudio();
 
+const deleteItem = (item) => {
+  try {
+    console.log(item);
 
-}
+    track_title.textContent = item.song;
+    track_artist.textContent = item.artist;
+    delete_confirmation.classList.remove("hidden");
 
-renderAudio()
+    btn_delete.addEventListener("click", () => {
+      delete_confirmation.classList.add("hidden");
+    });
+
+    btn_confirm.addEventListener("click", () => {
+      const transaction = db.transaction(["audioStore"], "readwrite");
+      const audioStore = transaction.objectStore("audioStore");
+      const deleteAudio = audioStore.delete(item.id);
+
+      deleteAudio.onsuccess = (ev) => {
+        delete_modal.classList.add("active")
+        setTimeout(() => {
+          delete_confirmation.classList.add("hidden");
+        delete_modal.classList.remove("active")
+
+        }, 2000);
+        loadAudio();
+      };
+
+      deleteAudio.onerror = (ev) => {
+        console.log(ev.target.error);
+      };
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const result = (arr_audio) => {
   playlist.textContent = "";
 
-
-
   arr_audio.slice(0, count).forEach((el) => {
     const item = document.createElement("li");
     item.classList.add("song-item");
-    
+
     item.innerHTML = `
               <div>
                 <h3>${el.song}</h3>
                 <p>${el.artist}</p>
               </div>
+
+              <span class="delete">🗑️</span>
               
             `;
-    item.addEventListener("click", () =>{
+
+    item.querySelector(".delete").addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      deleteItem(el);
+    });
+    item.addEventListener("click", () => {
       renderAudio(el);
-    })
+    });
 
     playlist.appendChild(item);
   });
 };
 
+const switchTrack = (type) => {
+  audios.pause();
 
-
-const switchTrack = (type) =>{
-  audios.pause()
-
-  if(type === "prev"){
+  if (type === "prev") {
     currentIndex = (currentIndex - 1 + all_audio.length) % all_audio.length;
-
-  }else if (type === "next"){
-    currentIndex = (currentIndex + 1) % all_audio.length
-
+  } else if (type === "next") {
+    currentIndex = (currentIndex + 1) % all_audio.length;
   }
 
   renderAudio(all_audio[currentIndex]);
-  audios.play()
-}
+  audios.play();
+};
 
-prev.addEventListener("click", () =>{
-  switchTrack("prev")
-})
+prev.addEventListener("click", () => {
+  switchTrack("prev");
+});
 
-next.addEventListener("click", () =>{
-  switchTrack("next")
-})
+next.addEventListener("click", () => {
+  switchTrack("next");
+});
 
-
-audios.addEventListener("timeupdate", () =>{
+audios.addEventListener("timeupdate", () => {
   start.textContent = formatTime(audios.currentTime);
 
-  if(audios.duration){
+  if (audios.duration) {
     const progres = (audios.currentTime / audios.duration) * 100;
     length_audio.value = progres;
-    
   }
+});
 
-})
-
-length_audio.addEventListener("input", (e) =>{
-  if(audios.duration){
+length_audio.addEventListener("input", (e) => {
+  if (audios.duration) {
     const newTime = (e.target.value / 100) * audios.duration;
     audios.currentTime = newTime;
   }
-})
+});
 
+audios.addEventListener("ended", () => {
+  switchTrack("next");
+});
 
-audios.addEventListener("ended", () =>{
-  switchTrack("next")
-})
+btn_more.addEventListener("click", () => {
+  count += +2;
 
+  result(all_audio);
 
-btn_more.addEventListener("click", () =>{
-  count += + 2;
-
-  result(all_audio)
-  
-
-  console.log(count)
-
-})
+  console.log(count);
+});
