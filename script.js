@@ -18,23 +18,35 @@ const track_artist = document.querySelector("#track-artist");
 
 const btn_delete = document.querySelector(".cancel-btn");
 const btn_confirm = document.querySelector(".delete-btn");
-const delete_modal = document.querySelector(".delete-modal")
+const delete_modal = document.querySelector(".delete-modal");
 let count = 2;
 
-
-const checkClass = () =>{
-
-  if(play.classList.contains("playing")){
-    play.textContent = "⏸";
-  
-  }else{
-    play.textContent = "▶";
-  
-  }
-
+if ("mediaSession" in navigator) {
+  navigator.mediaSession.setActionHandler("previoustrack", () =>
+    switchTrack("prev")
+  );
+  navigator.mediaSession.setActionHandler("nexttrack", () =>
+    switchTrack("next")
+  );
+  navigator.mediaSession.setActionHandler("play", () => {
+    audios.play();
+    play.classList.add("playing");
+    checkClass();
+  });
+  navigator.mediaSession.setActionHandler("pause", () => {
+    audios.pause();
+    play.classList.remove("playing");
+    checkClass();
+  });
 }
 
-
+const checkClass = () => {
+  if (play.classList.contains("playing")) {
+    play.textContent = "⏸";
+  } else {
+    play.textContent = "▶";
+  }
+};
 
 let currentIndex = 0;
 let all_audio = [];
@@ -209,9 +221,9 @@ const renderAudio = (audio) => {
     end.textContent = time;
   });
 
-  audios.play()
-  play.classList.add("playing")
-  checkClass()
+  audios.play();
+  play.classList.add("playing");
+  checkClass();
 };
 
 renderAudio();
@@ -234,11 +246,10 @@ const deleteItem = (item) => {
       const deleteAudio = audioStore.delete(item.id);
 
       deleteAudio.onsuccess = (ev) => {
-        delete_modal.classList.add("active")
+        delete_modal.classList.add("active");
         setTimeout(() => {
           delete_confirmation.classList.add("hidden");
-        delete_modal.classList.remove("active")
-
+          delete_modal.classList.remove("active");
         }, 2000);
         loadAudio();
       };
@@ -291,8 +302,19 @@ const switchTrack = (type) => {
     currentIndex = (currentIndex + 1) % all_audio.length;
   }
 
-  renderAudio(all_audio[currentIndex]);
-  audios.play();
+  const nextTrack = all_audio[currentIndex];
+
+  if (nextTrack) {
+    renderAudio(nextTrack);
+
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: nextTrack.song || "Неизвестный трек",
+        artist: nextTrack.artist || "Неизвестный артист",
+      });
+    }
+    // audios.play();
+  }
 };
 
 prev.addEventListener("click", () => {
