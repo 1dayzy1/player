@@ -19,6 +19,10 @@ const track_artist = document.querySelector("#track-artist");
 const btn_delete = document.querySelector(".cancel-btn");
 const btn_confirm = document.querySelector(".delete-btn");
 const delete_modal = document.querySelector(".delete-modal");
+
+
+const input_search = document.querySelector('.input-search');
+
 let count = 2;
 
 if ("mediaSession" in navigator) {
@@ -262,6 +266,25 @@ const deleteItem = (item) => {
     console.log(error);
   }
 };
+
+input_search.addEventListener('input', () =>{
+  
+  const searchValue = input_search.value.toLowerCase();
+
+  if (!searchValue) {
+    result(all_audio); // Если поле пустое, показываем пустой результат
+    return;
+  }
+
+  const foundTracks = all_audio.filter(el =>
+    el.song.toLowerCase().includes(searchValue)
+  );
+
+  console.log(foundTracks);
+  result(foundTracks);
+
+})
+
 
 const result = (arr_audio) => {
   playlist.textContent = "";

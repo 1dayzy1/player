@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,6 +8,21 @@
   </head>
   <body>
     <div class="container">
+      <div class="container-search">
+        <input type="text" placeholder="Введите название..." class="input-search" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="currentColor"
+          class="search"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
+          />
+        </svg>
+      </div>
       <div class="player-layout">
         <section class="card upload-card">
           <h2 class="card-title">Загрузить песню</h2>
@@ -40,7 +55,7 @@
           </div>
 
           <div class="controls">
-            <audio src=""  class="audio"></audio>
+            <audio src="" class="audio"></audio>
             <button class="control-btn prev">⏮</button>
             <button class="control-btn play-btn">▶</button>
             <button class="control-btn next">⏭</button>
@@ -61,31 +76,23 @@
       </div>
     </div>
 
-    
-     
-      
-        <div id="delete-confirmation" class="delete-confirmation hidden">
-          <div class="delete-modal">
-            <h1 class="delete-not">Трек удален!</h1>
-            <p class="text">Точно хотите удалить этот трек?</p>
+    <div id="delete-confirmation" class="delete-confirmation hidden">
+      <div class="delete-modal">
+        <h1 class="delete-not">Трек удален!</h1>
+        <p class="text">Точно хотите удалить этот трек?</p>
 
-            <div class="content">
-              <div class="track-info-preview">
-                <strong id="track-title"></strong><br />
-                <span id="track-artist"></span>
-              </div>
-              <div class="confirmation-buttons">
-                <button id="cancel-delete" class="btn cancel-btn">Отмена</button>
-                <button id="confirm-delete" class="btn delete-btn">
-                  Удалить
-                </button>
-              </div>
-            </div>
-            
+        <div class="content">
+          <div class="track-info-preview">
+            <strong id="track-title"></strong><br />
+            <span id="track-artist"></span>
+          </div>
+          <div class="confirmation-buttons">
+            <button id="cancel-delete" class="btn cancel-btn">Отмена</button>
+            <button id="confirm-delete" class="btn delete-btn">Удалить</button>
           </div>
         </div>
-      
-    
+      </div>
+    </div>
 
     <script src="script.js"></script>
   </body>
