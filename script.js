@@ -12,7 +12,7 @@ const prev = document.querySelector(".prev");
 const next = document.querySelector(".next");
 const btn_more = document.querySelector(".more-track");
 const delete_confirmation = document.querySelector(".delete-confirmation");
-
+const container_song = document.querySelector(".container-song")
 const track_title = document.querySelector("#track-title");
 const track_artist = document.querySelector("#track-artist");
 
@@ -281,10 +281,34 @@ input_search.addEventListener('input', () =>{
   );
 
   console.log(foundTracks);
-  result(foundTracks);
+  render_search(foundTracks);
 
 })
 
+
+const render_search = (arr_audio) =>{
+    container_song.textContent = "";
+
+  arr_audio.forEach((el) => {
+    const item = document.createElement("div");
+    item.classList.add("song-search");
+
+    item.innerHTML = `
+              
+                <h3>${el.song}</h3>
+                <p>${el.artist}</p>
+             
+              
+            `;
+
+    
+    item.addEventListener("click", () => {
+      renderAudio(el);
+    });
+
+    container_song.appendChild(item);
+  });
+}
 
 const result = (arr_audio) => {
   playlist.textContent = "";
