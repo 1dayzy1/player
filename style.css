@@ -217,12 +217,14 @@ input[type="range"] {
   top: 79%;
   left: 0;
   max-height: 180px;
-  
+  display: none;
   
   overflow-y: auto;
 }
 
-
+.input-search:focus + .container-song{
+  display: block;
+}
 
 .song-item {
   display: flex;
